@@ -10,8 +10,24 @@
 html,body{overflow-x:hidden}
 body{
   font-family:'Poppins',system-ui,sans-serif;
-  background:radial-gradient(ellipse at top,#0f172a 0%,#020617 60%);
   color:white;min-height:100vh;
+}
+
+/* BACKGROUND SLIDESHOW */
+#bgSlideshow{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;
+  overflow:hidden;
+}
+#bgSlideshow .bg-slide{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  background-size:cover;background-position:center;
+  background-color:#0f172a;
+  opacity:0;transition:opacity 2s ease-in-out;
+}
+#bgSlideshow .bg-slide.active{opacity:1}
+#bgSlideshow .bg-overlay{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  background:radial-gradient(ellipse at top,rgba(15,23,42,0.7) 0%,rgba(2,6,23,0.85) 60%);
 }
 
 /* ANIMATIONS */
@@ -79,11 +95,6 @@ body{
   border:1px solid rgba(34,197,94,.3);border-radius:16px;
   padding:20px 24px;min-width:90px;text-align:center;backdrop-filter:blur(10px);
 }
-.image-placeholder{
-  background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(15,23,42,.8));
-  border:2px dashed rgba(34,197,94,.3);border-radius:20px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-}
 .ring-decoration{
   position:absolute;border-radius:50%;border:1px solid rgba(34,197,94,.15);
   animation:spin-slow linear infinite;
@@ -113,15 +124,18 @@ body{
 }
 .slide-enter{animation:bounce-in .6s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0}
 .slide-text{font-size:clamp(14px,3.5vw,18px);line-height:1.9;color:rgba(255,255,255,.88);text-shadow:0 0 10px rgba(34,197,94,.1)}
-
-/* DOT NAV */
-.dot-nav{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
-.dot{height:8px;border-radius:4px;background:rgba(34,197,94,.3);border:none;cursor:pointer;transition:all .3s}
-.dot.active{width:24px;background:#22c55e}
-.dot:not(.active){width:8px}
 </style>
 </head>
 <body>
+
+<!-- BACKGROUND SLIDESHOW -->
+<div id="bgSlideshow">
+  <div class="bg-slide active" style="background-image:url('images/yash1.jpg')"></div>
+  <div class="bg-slide" style="background-image:url('images/yash2.jpg')"></div>
+  <div class="bg-slide" style="background-image:url('images/yash3.jpg')"></div>
+  <div class="bg-slide" style="background-image:url('images/yash4.jpg')"></div>
+  <div class="bg-overlay"></div>
+</div>
 
 <div id="app">
   <!-- BG RINGS -->
@@ -239,11 +253,6 @@ const messages = [
     text:'Log kehte hain:\n"10th ke baad sab alag ho jaate hain."\n\nPar hum unme se nahi hain.\n\nAur mujhe yakeen hai —\nhum kabhi unme se nahi honge. 🤝'
   },
   {
-    emoji:"📸", title:"Yaadein",
-    isPhotos: true,
-    text:"Har ek moment = ek alag yaad 🔥"
-  },
-  {
     emoji:"🚀", title:"Future",
     text:"Future me kya hoga pata nahi...\n\nLife change hogi,\nlog change honge,\nshayad hum bhi thoda badal jaayein.\n\nPar ek cheez kabhi nahi badlegi —\nTu mera bhai hai. ❤️💪"
   },
@@ -257,19 +266,27 @@ const messages = [
   }
 ];
 
-const photos = [
-  {src:"images/yash1.jpg", emoji:"📷"},
-  {src:"images/yash2.jpg", emoji:"🖼️"},
-  {src:"images/yash3.jpg", emoji:"🌟"},
-  {src:"images/yash4.jpg", emoji:"💚"},
-  {src:"images/yash5.jpg", emoji:"🔥"}
-];
-
 let currentSlide = 0;
-let photoIdx = 0;
-let photoTimer = null;
 
-// ===================== BACKGROUND =====================
+// ===================== BACKGROUND SLIDESHOW =====================
+let bgSlideIndex = 0;
+const bgSlides = document.querySelectorAll('#bgSlideshow .bg-slide');
+const totalBgSlides = bgSlides.length;
+
+function nextBgSlide(){
+  bgSlides.forEach((slide, i) => {
+    slide.classList.remove('active');
+    if(i === (bgSlideIndex + 1) % totalBgSlides){
+      slide.classList.add('active');
+    }
+  });
+  bgSlideIndex = (bgSlideIndex + 1) % totalBgSlides;
+}
+
+// Change background every 5 seconds
+setInterval(nextBgSlide, 5000);
+
+// ===================== BACKGROUND PARTICLES =====================
 function createParticles(){
   for(let i=0;i<35;i++){
     const p = document.createElement("div");
@@ -324,7 +341,7 @@ function launchConfetti(){
   }
   setTimeout(()=>pieces.forEach(p=>p.remove()),6000);
 
-    playBirthdayMusic(); // ✅ YE ADD KAR
+    playBirthdayMusic();
 }
 
 // ===================== COUNTDOWN =====================
@@ -361,8 +378,6 @@ function showBirthday(){
   void p.offsetWidth;
   p.style.animation="bounce-in .7s cubic-bezier(.34,1.56,.64,1) forwards";
   launchConfetti();
-
-
 }
 
 function startSlides(){
@@ -408,16 +423,8 @@ function renderSlide(){
   div.className="slide-enter";
   div.style.width="100%";
 
-  if(slide.isPhotos){
-    div.innerHTML=buildPhotoSlide(slide);
-    wrap.appendChild(div);
-    startPhotoTimer();
-    updateDots(0);
-  } else {
-    div.innerHTML=buildTextSlide(slide);
-    wrap.appendChild(div);
-    if(photoTimer){ clearInterval(photoTimer); photoTimer=null; }
-  }
+  div.innerHTML=buildTextSlide(slide);
+  wrap.appendChild(div);
 
   // Back button
   const backBtn=document.getElementById("backBtn");
@@ -445,67 +452,12 @@ function buildTextSlide(slide){
   `;
 }
 
-function buildPhotoSlide(slide){
-  const photoHtml=photos.map((p,i)=>`
-    <button class="dot ${i===0?"active":""}" id="dot-${i}" onclick="setPhoto(${i})"></button>
-  `).join("");
-
-  return `
-    <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%">
-      <div style="position:relative;width:100%;max-width:500px">
-        <div id="photoDisplay" class="image-placeholder" style="width:100%;height:clamp(220px,45vw,380px);box-shadow:0 0 40px rgba(34,197,94,.2),0 20px 60px rgba(0,0,0,.5);border-radius:20px;transition:all .4s">
-          <div id="photoEmoji" style="font-size:80px;margin-bottom:12px">${photos[0].emoji}</div>
-          <div style="font-size:13px;color:rgba(134,239,172,.6);font-family:monospace;background:rgba(0,0,0,.3);padding:6px 14px;border-radius:8px" id="photoLabel">${photos[0].src}</div>
-          <div style="font-size:11px;color:rgba(134,239,172,.35);margin-top:8px;font-style:italic">Replace with yash1.jpg – yash5.jpg</div>
-        </div>
-        <div class="dot-nav">${photoHtml}</div>
-      </div>
-      <p style="margin-top:30px;font-size:clamp(16px,4vw,22px);color:rgba(255,255,255,.85);font-weight:500;text-align:center;text-shadow:0 0 20px rgba(34,197,94,.3)">${slide.text}</p>
-    </div>
-  `;
-}
-
-function setPhoto(i){
-  photoIdx=i;
-  const display=document.getElementById("photoDisplay");
-  if(!display) return;
-  const p=photos[i];
-  // Try actual image, else show emoji placeholder
-  const img=new Image();
-  img.onload=function(){
-    display.innerHTML=`<img src="${p.src}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">`;
-  };
-  img.onerror=function(){
-    document.getElementById("photoEmoji").textContent=p.emoji;
-    document.getElementById("photoLabel").textContent=p.src;
-  };
-  img.src=p.src;
-  updateDots(i);
-}
-
-function updateDots(active){
-  photos.forEach((_,i)=>{
-    const d=document.getElementById("dot-"+i);
-    if(d){ d.className="dot"+(i===active?" active":""); }
-  });
-}
-
-function startPhotoTimer(){
-  if(photoTimer) clearInterval(photoTimer);
-  photoIdx=0;
-  photoTimer=setInterval(()=>{
-    photoIdx=(photoIdx+1)%photos.length;
-    setPhoto(photoIdx);
-  },2200);
-}
-
 function nextSlide(){
   if(currentSlide<messages.length-1){
     currentSlide++;
     renderSlide();
   } else {
     hideAll();
-    if(photoTimer){ clearInterval(photoTimer); photoTimer=null; }
     const p=document.getElementById("finishedPage");
     p.classList.remove("hidden");
     p.style.animation="none";
@@ -539,9 +491,8 @@ function playBirthdayMusic(){
 
   if(!music) return;
 
-  music.volume = 0.5; // volume control (0.0 - 1.0)
+  music.volume = 0.5;
 
-  // autoplay hack
   music.muted = true;
   music.play().then(()=>{
     setTimeout(()=>{
