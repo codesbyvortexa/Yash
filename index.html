@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Yash 🎉</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden}
+body{
+  font-family:'Poppins',system-ui,sans-serif;
+  background:radial-gradient(ellipse at top,#0f172a 0%,#020617 60%);
+  color:white;min-height:100vh;
+}
+
+/* ANIMATIONS */
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes pulse-glow{
+  0%,100%{box-shadow:0 0 20px rgba(34,197,94,.3),0 0 60px rgba(34,197,94,.1)}
+  50%{box-shadow:0 0 40px rgba(34,197,94,.6),0 0 100px rgba(34,197,94,.2)}
+}
+@keyframes float-up{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:1}90%{opacity:.6}
+  100%{transform:translateY(-100px) scale(1);opacity:0}
+}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes bounce-in{
+  0%{transform:scale(0) rotate(-10deg);opacity:0}
+  60%{transform:scale(1.1) rotate(3deg)}
+  80%{transform:scale(.95) rotate(-1deg)}
+  100%{transform:scale(1) rotate(0deg);opacity:1}
+}
+@keyframes slide-up{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes twinkle{
+  0%,100%{opacity:.2;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.5)}
+}
+@keyframes confetti-fall{
+  0%{transform:translateY(-10px) rotateX(0deg) rotateY(0deg);opacity:1}
+  100%{transform:translateY(100vh) rotateX(360deg) rotateY(180deg);opacity:0}
+}
+@keyframes flip-scale{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+/* BASE CLASSES */
+.gradient-text{
+  background:linear-gradient(90deg,#22c55e,#86efac,#4ade80,#22c55e);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;animation:shimmer 3s linear infinite;
+}
+.glow-border{animation:pulse-glow 2s ease-in-out infinite}
+.particle{position:fixed;border-radius:50%;pointer-events:none;animation:float-up linear infinite}
+.star{position:fixed;border-radius:50%;background:white;pointer-events:none;animation:twinkle ease-in-out infinite}
+.confetti-piece{position:fixed;pointer-events:none;animation:confetti-fall linear forwards;border-radius:2px}
+.glass-card{
+  background:rgba(15,23,42,.6);backdrop-filter:blur(20px);
+  border:1px solid rgba(34,197,94,.2);border-radius:24px;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#22c55e,#16a34a);border:none;
+  border-radius:50px;color:white;font-family:'Poppins',sans-serif;
+  font-size:16px;font-weight:600;padding:14px 36px;cursor:pointer;
+  position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;
+  letter-spacing:.5px;
+}
+.btn-primary:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 30px rgba(34,197,94,.5)}
+.btn-primary:active{transform:scale(.98)}
+.btn-ghost{
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);
+  border-radius:50px;color:#4ade80;font-size:15px;
+  font-family:'Poppins',sans-serif;font-weight:500;
+  padding:12px 28px;cursor:pointer;transition:all .2s;
+}
+.btn-ghost:hover{background:rgba(34,197,94,.2)}
+.countdown-digit{
+  background:linear-gradient(180deg,rgba(34,197,94,.15),rgba(34,197,94,.05));
+  border:1px solid rgba(34,197,94,.3);border-radius:16px;
+  padding:20px 24px;min-width:90px;text-align:center;backdrop-filter:blur(10px);
+}
+.image-placeholder{
+  background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(15,23,42,.8));
+  border:2px dashed rgba(34,197,94,.3);border-radius:20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.ring-decoration{
+  position:absolute;border-radius:50%;border:1px solid rgba(34,197,94,.15);
+  animation:spin-slow linear infinite;
+}
+
+/* LAYOUT */
+#app{
+  min-height:100vh;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;
+}
+#content{position:relative;z-index:10;width:100%;max-width:700px;text-align:center}
+.hidden{display:none!important}
+
+/* PROGRESS BAR */
+.progress-bar{display:flex;gap:6px;justify-content:center;margin-bottom:28px}
+.progress-seg{
+  height:3px;flex:1;max-width:60px;border-radius:2px;
+  background:rgba(34,197,94,.2);transition:background .4s;
+}
+.progress-seg.done{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5)}
+
+/* SLIDE CONTENT */
+.slide-wrap{
+  min-height:clamp(300px,65vh,520px);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;
+}
+.slide-enter{animation:bounce-in .6s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0}
+.slide-text{font-size:clamp(14px,3.5vw,18px);line-height:1.9;color:rgba(255,255,255,.88);text-shadow:0 0 10px rgba(34,197,94,.1)}
+
+/* DOT NAV */
+.dot-nav{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+.dot{height:8px;border-radius:4px;background:rgba(34,197,94,.3);border:none;cursor:pointer;transition:all .3s}
+.dot.active{width:24px;background:#22c55e}
+.dot:not(.active){width:8px}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- BG RINGS -->
+  <div class="ring-decoration" style="width:500px;height:500px;top:-150px;right:-150px;animation-duration:30s"></div>
+  <div class="ring-decoration" style="width:300px;height:300px;bottom:-100px;left:-100px;animation-duration:20s;animation-direction:reverse"></div>
+
+  <div id="content">
+
+    <!-- ===== COUNTDOWN PAGE ===== -->
+    <div id="countdownPage" style="animation:slide-up .8s ease forwards">
+      <div style="font-size:48px;margin-bottom:8px">⏳</div>
+      <h1 class="gradient-text" style="font-family:'Dancing Script',cursive;font-size:clamp(28px,7vw,52px);font-weight:700;margin-bottom:6px">
+        Something Big Is Coming
+      </h1>
+      <p style="color:rgba(134,239,172,.6);font-size:14px;letter-spacing:2px;margin-bottom:28px">YASH KA BIRTHDAY</p>
+
+      <div style="display:flex;justify-content:center;gap:clamp(8px,3vw,20px);flex-wrap:wrap;margin-bottom:36px">
+        <div class="countdown-digit">
+          <span id="cHrs" style="font-size:clamp(36px,8vw,72px);font-weight:800;color:#4ade80;text-shadow:0 0 30px rgba(34,197,94,.6);display:block;line-height:1;transition:transform .3s">00</span>
+          <span style="font-size:11px;letter-spacing:3px;color:rgba(134,239,172,.7);text-transform:uppercase;font-weight:500">Hours</span>
+        </div>
+        <div style="font-size:48px;color:#22c55e;opacity:.7;align-self:flex-start;margin-top:20px">:</div>
+        <div class="countdown-digit">
+          <span id="cMins" style="font-size:clamp(36px,8vw,72px);font-weight:800;color:#4ade80;text-shadow:0 0 30px rgba(34,197,94,.6);display:block;line-height:1;transition:transform .3s">00</span>
+          <span style="font-size:11px;letter-spacing:3px;color:rgba(134,239,172,.7);text-transform:uppercase;font-weight:500">Minutes</span>
+        </div>
+        <div style="font-size:48px;color:#22c55e;opacity:.7;align-self:flex-start;margin-top:20px">:</div>
+        <div class="countdown-digit">
+          <span id="cSecs" style="font-size:clamp(36px,8vw,72px);font-weight:800;color:#4ade80;text-shadow:0 0 30px rgba(34,197,94,.6);display:block;line-height:1;transition:transform .3s">00</span>
+          <span style="font-size:11px;letter-spacing:3px;color:rgba(134,239,172,.7);text-transform:uppercase;font-weight:500">Seconds</span>
+        </div>
+      </div>
+
+      <div class="glass-card" style="padding:20px 30px;display:inline-block;animation:pulse-glow 3s ease-in-out infinite">
+        <p style="color:rgba(134,239,172,.8);font-size:15px;line-height:1.7">
+          Kuch khaas hone wala hai... 🌟<br>
+          <span style="font-size:13px;color:rgba(134,239,172,.5)">6 April ko ruk jaana!</span>
+        </p>
+      </div>
+
+      <div style="margin-top:24px">
+
+      </div>
+    </div>
+
+    <!-- ===== BIRTHDAY LANDING PAGE ===== -->
+    <div id="landingPage" class="hidden" style="animation:bounce-in .7s cubic-bezier(.34,1.56,.64,1) forwards">
+      <div style="font-size:80px;margin-bottom:16px;filter:drop-shadow(0 0 30px rgba(34,197,94,.4))">🎉</div>
+      <h1 class="gradient-text" style="font-family:'Dancing Script',cursive;font-size:clamp(32px,9vw,72px);font-weight:700;margin-bottom:8px;line-height:1.1">
+        Happy Birthday Yash!
+      </h1>
+      <p style="font-size:clamp(14px,3.5vw,18px);color:rgba(134,239,172,.7);margin-bottom:36px;letter-spacing:1px">
+        6 April 2026 🎂✨
+      </p>
+      <div class="glass-card glow-border" style="padding:clamp(20px,5vw,36px);margin-bottom:36px;text-align:center">
+        <p style="font-size:clamp(15px,3.8vw,20px);line-height:1.9;color:rgba(255,255,255,.9)">
+          Ek banda hota hai life mein jo asli hota hai —<br>
+          <strong style="color:#4ade80">tu wahi banda hai mere liye. ❤️</strong><br><br>
+          Aaj tera din hai. Teri raat hai.<br>
+          Tera saal hai. 🔥
+        </p>
+      </div>
+      <button class="btn-primary" onclick="startSlides()" style="font-size:18px;padding:16px 44px">
+        Open Your Gift 🎁
+      </button>
+    </div>
+
+    <!-- ===== SLIDES PAGE ===== -->
+    <div id="slidesPage" class="hidden">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="slide-wrap" id="slideWrap"></div>
+      <div style="margin-top:28px;display:flex;justify-content:center;gap:12px">
+        <button class="btn-ghost hidden" id="backBtn" onclick="prevSlide()">← Back</button>
+        <button class="btn-primary" id="nextBtn" onclick="nextSlide()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ===== FINISHED PAGE ===== -->
+    <div id="finishedPage" class="hidden" style="animation:bounce-in .7s cubic-bezier(.34,1.56,.64,1) forwards">
+      <div style="font-size:96px;margin-bottom:20px;filter:drop-shadow(0 0 40px rgba(34,197,94,.5));animation:spin-slow 4s linear infinite;display:inline-block">💚</div>
+      <h2 class="gradient-text" style="font-family:'Dancing Script',cursive;font-size:clamp(28px,7vw,56px);font-weight:700;margin-bottom:20px">
+        Love You Bhai!
+      </h2>
+      <div class="glass-card glow-border" style="padding:28px 36px;margin-bottom:32px">
+        <p style="font-size:clamp(15px,4vw,20px);line-height:1.9;color:rgba(255,255,255,.9)">
+          Thanks for being part of my life ❤️<br>
+          Tu hai isliye life interesting hai 😄<br><br>
+          <strong style="color:#4ade80;font-size:1.1em">Happy Birthday once again! 🎂🔥</strong>
+        </p>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-primary" onclick="launchConfetti()">Celebrate Again 🎉</button>
+        <button class="btn-ghost" onclick="restart()">Read Again ↺</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ===================== DATA =====================
+const BIRTHDAY = new Date("2026-04-05T00:00:00");
+
+const messages = [
+  {
+    emoji:"❤️", title:"Mere Bhai",
+    text:"Yash...\n\nTu sirf ek dost nahi hai.\nTu wo banda hai jo har mushkil mein,\nhar situation mein,\nbina kisi reason ke\nmere saath khada raha. 💯"
+  },
+  {
+    emoji:"🔥", title:"10th Ke Baad",
+    text:'Log kehte hain:\n"10th ke baad sab alag ho jaate hain."\n\nPar hum unme se nahi hain.\n\nAur mujhe yakeen hai —\nhum kabhi unme se nahi honge. 🤝'
+  },
+  {
+    emoji:"📸", title:"Yaadein",
+    isPhotos: true,
+    text:"Har ek moment = ek alag yaad 🔥"
+  },
+  {
+    emoji:"🚀", title:"Future",
+    text:"Future me kya hoga pata nahi...\n\nLife change hogi,\nlog change honge,\nshayad hum bhi thoda badal jaayein.\n\nPar ek cheez kabhi nahi badlegi —\nTu mera bhai hai. ❤️💪"
+  },
+  {
+    emoji:"🎂", title:"Happy Birthday!",
+    text:"Bas ek dua hai —\n\nTu life mein itna bada ban\nki duniya dekhti reh jaaye. 🌟\n\nAur main front row mein baitha\ntere liye cheer karta rahoon. 🙌"
+  },
+  {
+    emoji:"💚", title:"Once Again...",
+    text:"Happy Birthday Yash! 🎉\n\nTu important hai.\nTu special hai.\nAur hamesha rahega. 💯\n\nLove you bhai 🔥"
+  }
+];
+
+const photos = [
+  {src:"images/yash1.jpg", emoji:"📷"},
+  {src:"images/yash2.jpg", emoji:"🖼️"},
+  {src:"images/yash3.jpg", emoji:"🌟"},
+  {src:"images/yash4.jpg", emoji:"💚"},
+  {src:"images/yash5.jpg", emoji:"🔥"}
+];
+
+let currentSlide = 0;
+let photoIdx = 0;
+let photoTimer = null;
+
+// ===================== BACKGROUND =====================
+function createParticles(){
+  for(let i=0;i<35;i++){
+    const p = document.createElement("div");
+    p.className = "particle";
+    const color = Math.random()>.5?"#22c55e":"#4ade80";
+    const size = 3+Math.random()*5;
+    Object.assign(p.style,{
+      left:Math.random()*100+"%",
+      width:size+"px",height:size+"px",
+      background:color,
+      animationDuration:(6+Math.random()*8)+"s",
+      animationDelay:Math.random()*8+"s",
+      opacity:.3+Math.random()*.5,
+      boxShadow:`0 0 ${size*2}px ${color}`
+    });
+    document.getElementById("app").appendChild(p);
+  }
+}
+
+function createStars(){
+  for(let i=0;i<60;i++){
+    const s = document.createElement("div");
+    s.className = "star";
+    const size = 1+Math.random()*2.5;
+    Object.assign(s.style,{
+      top:Math.random()*100+"%",left:Math.random()*100+"%",
+      width:size+"px",height:size+"px",
+      animationDuration:(2+Math.random()*4)+"s",
+      animationDelay:Math.random()*4+"s"
+    });
+    document.getElementById("app").appendChild(s);
+  }
+}
+
+// ===================== CONFETTI =====================
+function launchConfetti(){
+  const colors=["#22c55e","#4ade80","#86efac","#fbbf24","#f472b6","#60a5fa"];
+  const pieces=[];
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.className="confetti-piece";
+    const w=6+Math.random()*8, h=10+Math.random()*12;
+    Object.assign(c.style,{
+      left:Math.random()*100+"%",top:"-20px",
+      background:colors[Math.floor(Math.random()*colors.length)],
+      width:w+"px",height:h+"px",
+      animationDuration:(3+Math.random()*3)+"s",
+      animationDelay:Math.random()*2+"s"
+    });
+    document.getElementById("app").appendChild(c);
+    pieces.push(c);
+  }
+  setTimeout(()=>pieces.forEach(p=>p.remove()),6000);
+
+    playBirthdayMusic(); // ✅ YE ADD KAR
+}
+
+// ===================== COUNTDOWN =====================
+function pad(n){ return String(n).padStart(2,"0"); }
+
+function updateClock(){
+  const diff = BIRTHDAY.getTime()-Date.now();
+  if(diff<=0){ showBirthday(); return; }
+  const hrs=Math.floor(diff/(1000*60*60));
+  const mins=Math.floor((diff%(1000*60*60))/(1000*60));
+  const secs=Math.floor((diff%(1000*60))/1000);
+  const hEl=document.getElementById("cHrs");
+  const mEl=document.getElementById("cMins");
+  const sEl=document.getElementById("cSecs");
+  if(hEl.textContent!==pad(hrs)){hEl.style.transform="scale(1.2)";setTimeout(()=>hEl.style.transform="",300);}
+  if(sEl.textContent!==pad(secs)){sEl.style.transform="scale(1.2)";setTimeout(()=>sEl.style.transform="",300);}
+  hEl.textContent=pad(hrs);
+  mEl.textContent=pad(mins);
+  sEl.textContent=pad(secs);
+}
+
+// ===================== PAGES =====================
+function hideAll(){
+  ["countdownPage","landingPage","slidesPage","finishedPage"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+}
+
+function showBirthday(){
+  hideAll();
+  const p=document.getElementById("landingPage");
+  p.classList.remove("hidden");
+  p.style.animation="none";
+  void p.offsetWidth;
+  p.style.animation="bounce-in .7s cubic-bezier(.34,1.56,.64,1) forwards";
+  launchConfetti();
+
+
+}
+
+function startSlides(){
+  hideAll();
+  currentSlide=0;
+  document.getElementById("slidesPage").classList.remove("hidden");
+  buildProgressBar();
+  renderSlide();
+  launchConfetti();
+}
+
+function restart(){
+  hideAll();
+  currentSlide=0;
+  showBirthday();
+}
+
+// ===================== SLIDES =====================
+function buildProgressBar(){
+  const bar=document.getElementById("progressBar");
+  bar.innerHTML="";
+  messages.forEach((_,i)=>{
+    const seg=document.createElement("div");
+    seg.className="progress-seg"+(i<=currentSlide?" done":"");
+    seg.id="seg-"+i;
+    bar.appendChild(seg);
+  });
+}
+
+function updateProgressBar(){
+  messages.forEach((_,i)=>{
+    const seg=document.getElementById("seg-"+i);
+    if(seg) seg.className="progress-seg"+(i<=currentSlide?" done":"");
+  });
+}
+
+function renderSlide(){
+  const slide=messages[currentSlide];
+  const wrap=document.getElementById("slideWrap");
+  wrap.innerHTML="";
+
+  const div=document.createElement("div");
+  div.className="slide-enter";
+  div.style.width="100%";
+
+  if(slide.isPhotos){
+    div.innerHTML=buildPhotoSlide(slide);
+    wrap.appendChild(div);
+    startPhotoTimer();
+    updateDots(0);
+  } else {
+    div.innerHTML=buildTextSlide(slide);
+    wrap.appendChild(div);
+    if(photoTimer){ clearInterval(photoTimer); photoTimer=null; }
+  }
+
+  // Back button
+  const backBtn=document.getElementById("backBtn");
+  if(currentSlide>0) backBtn.classList.remove("hidden");
+  else backBtn.classList.add("hidden");
+
+  // Next button
+  const nextBtn=document.getElementById("nextBtn");
+  nextBtn.textContent=currentSlide===messages.length-1?"Finish 🎉":"Next →";
+
+  updateProgressBar();
+}
+
+function buildTextSlide(slide){
+  const lines=slide.text.split("\n").map(line=>{
+    if(line==="") return `<p style="min-height:12px"></p>`;
+    const bold=line.includes("💯")||line.includes("❤️");
+    return `<p class="slide-text" style="${bold?"font-weight:600":""}">${line}</p>`;
+  }).join("");
+
+  return `
+    <div style="font-size:64px;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(34,197,94,.3))">${slide.emoji}</div>
+    <h3 class="gradient-text" style="font-family:'Dancing Script',cursive;font-size:clamp(24px,6vw,38px);margin-bottom:20px;font-weight:700">${slide.title}</h3>
+    <div class="glass-card" style="padding:clamp(20px,5vw,36px);text-align:left;max-width:640px;margin:0 auto">${lines}</div>
+  `;
+}
+
+function buildPhotoSlide(slide){
+  const photoHtml=photos.map((p,i)=>`
+    <button class="dot ${i===0?"active":""}" id="dot-${i}" onclick="setPhoto(${i})"></button>
+  `).join("");
+
+  return `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%">
+      <div style="position:relative;width:100%;max-width:500px">
+        <div id="photoDisplay" class="image-placeholder" style="width:100%;height:clamp(220px,45vw,380px);box-shadow:0 0 40px rgba(34,197,94,.2),0 20px 60px rgba(0,0,0,.5);border-radius:20px;transition:all .4s">
+          <div id="photoEmoji" style="font-size:80px;margin-bottom:12px">${photos[0].emoji}</div>
+          <div style="font-size:13px;color:rgba(134,239,172,.6);font-family:monospace;background:rgba(0,0,0,.3);padding:6px 14px;border-radius:8px" id="photoLabel">${photos[0].src}</div>
+          <div style="font-size:11px;color:rgba(134,239,172,.35);margin-top:8px;font-style:italic">Replace with yash1.jpg – yash5.jpg</div>
+        </div>
+        <div class="dot-nav">${photoHtml}</div>
+      </div>
+      <p style="margin-top:30px;font-size:clamp(16px,4vw,22px);color:rgba(255,255,255,.85);font-weight:500;text-align:center;text-shadow:0 0 20px rgba(34,197,94,.3)">${slide.text}</p>
+    </div>
+  `;
+}
+
+function setPhoto(i){
+  photoIdx=i;
+  const display=document.getElementById("photoDisplay");
+  if(!display) return;
+  const p=photos[i];
+  // Try actual image, else show emoji placeholder
+  const img=new Image();
+  img.onload=function(){
+    display.innerHTML=`<img src="${p.src}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">`;
+  };
+  img.onerror=function(){
+    document.getElementById("photoEmoji").textContent=p.emoji;
+    document.getElementById("photoLabel").textContent=p.src;
+  };
+  img.src=p.src;
+  updateDots(i);
+}
+
+function updateDots(active){
+  photos.forEach((_,i)=>{
+    const d=document.getElementById("dot-"+i);
+    if(d){ d.className="dot"+(i===active?" active":""); }
+  });
+}
+
+function startPhotoTimer(){
+  if(photoTimer) clearInterval(photoTimer);
+  photoIdx=0;
+  photoTimer=setInterval(()=>{
+    photoIdx=(photoIdx+1)%photos.length;
+    setPhoto(photoIdx);
+  },2200);
+}
+
+function nextSlide(){
+  if(currentSlide<messages.length-1){
+    currentSlide++;
+    renderSlide();
+  } else {
+    hideAll();
+    if(photoTimer){ clearInterval(photoTimer); photoTimer=null; }
+    const p=document.getElementById("finishedPage");
+    p.classList.remove("hidden");
+    p.style.animation="none";
+    void p.offsetWidth;
+    p.style.animation="bounce-in .7s cubic-bezier(.34,1.56,.64,1) forwards";
+    launchConfetti();
+  }
+}
+
+function prevSlide(){
+  if(currentSlide>0){
+    currentSlide--;
+    renderSlide();
+  }
+}
+
+// ===================== INIT =====================
+createStars();
+createParticles();
+
+const initDiff = BIRTHDAY.getTime()-Date.now();
+if(initDiff<=0){
+  showBirthday();
+} else {
+  updateClock();
+  setInterval(updateClock,1000);
+}
+
+function playBirthdayMusic(){
+  const music = document.getElementById("bgMusic");
+
+  if(!music) return;
+
+  music.volume = 0.5; // volume control (0.0 - 1.0)
+
+  // autoplay hack
+  music.muted = true;
+  music.play().then(()=>{
+    setTimeout(()=>{
+      music.muted = false;
+    }, 500);
+  }).catch(()=>{
+    console.log("Autoplay blocked");
+  });
+}
+
+</script>
+</body>
+</html>
